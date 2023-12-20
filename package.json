@@ -1,0 +1,19 @@
+{
+  "name": "portfolio-architecte-sophie-bluel-master",
+  "version": "1.0.0",
+  "description": "Le P6 Lets go",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Juliendev200/architectsite.git"
+  },
+  "author": "Juliendev200",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Juliendev200/architectsite/issues"
+  },
+  "homepage": "https://github.com/Juliendev200/architectsite#readme"
+}
