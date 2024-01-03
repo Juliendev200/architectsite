@@ -58,6 +58,11 @@ header {
 	justify-content: space-between;
 	margin: 50px 0
 }
+
+header a{
+	text-decoration: none;
+}
+
 section {
 	margin: 50px 0
 }
@@ -137,34 +142,36 @@ li:hover {
 	width: 100%;
 
 }
-#contact {
+#contact, #seconnecter {
 	width: 50%;
-margin: auto;
+	margin: auto;
 }
-#contact > * {
+
+#contact, #seconnecter > * {
 	text-align: center;
 
 }
-#contact h2{
+#contact h2, #seconnecter h2{
 	margin-bottom: 20px;
 }
-#contact form {
+#contact form, #seconnecter form {
 	text-align: left;
 	margin-top:30px;
 	display: flex;
 	flex-direction: column;
 }
 
-#contact input {
+#contact input, #seconnecter input {
 	height: 50px;
 	font-size: 1.2em;
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
-#contact label {
+
+#contact label, #seconnecter label {
 	margin: 2em 0 1em 0;
 }
-#contact textarea {
+#contact textarea, #seconnecter textarea {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
@@ -180,9 +187,50 @@ input[type="submit"]{
 	border-radius: 60px ;
 }
 
+input[type="submit"]:hover{
+	cursor: pointer;
+}
+
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
+	height: 60px;
+	font-size:14px;
 }
 
+footer nav ul li{
+	font-size:14px;
+}
+
+.button_div{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+    justify-content: center;
+	gap: 10px;
+	padding: 53px 0px;
+}
+
+.button {
+	border-radius: 60px;
+	border: 1px solid #1D6154;
+	background: #FFF;
+	padding: 5px 15px;
+	color: #1D6154;
+    font-family: Syne;
+    font-size: 16px;
+}
+
+.button:hover{
+	background: #1D6154;
+	color: #FFF;
+}
+
+.forgeted{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color:black;
+	padding-bottom:211px;
+}

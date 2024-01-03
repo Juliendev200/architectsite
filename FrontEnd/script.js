@@ -33,10 +33,49 @@ function loadworks(){
     });
 }
 
-async function LfData() {
-    const works = await lfworks();
-    const categories = await lfcategories();
-    loadworks();
+function showWorkandCategories() {
+    const buttondiv = document.createElement('div')
+    portfolio.appendChild(buttondiv)
+    const addbutton = document.createElement('button');
+    const gallery = document.querySelector(".gallery")
+    addbutton.textContent = "Tous";
+    addbutton.addEventListener("click", () =>{
+        loadworks()
+    });
+    buttondiv.classList.add("button_div");
+    addbutton.classList.add('button');
+    buttondiv.appendChild(addbutton);
+    datacategory.forEach((categories) => {
+        const buttoncategory = document.createElement("button");
+        buttoncategory.textContent = categories.name;
+        buttoncategory.classList.add('button');
+        buttondiv.appendChild(buttoncategory);
+        buttoncategory.addEventListener("click", () =>{
+            const categoryName = buttoncategory.textContent;
+            const filterbutton = datawork.filter (function (work){
+                return work.category.name === categoryName
+            })
+            gallery.innerHTML = ''
+            filterbutton.forEach((project) => {
+                const figure = document.createElement("figure");
+                figure.innerHTML=`
+                <img src="${project.imageUrl}" alt="${project.title}">
+                <figcaption>${project.title}</figcaption>`;
+                gallery.appendChild(figure);
+            });
+            console.log(filterbutton)
+        })
+        loadworks()
+    })
+    const secondchild = portfolio.children[1];
+    portfolio.insertBefore(buttondiv, secondchild)
 }
 
-LfData()
+async function loaddata() {
+    const works = await lfworks();
+    const categories = await lfcategories();
+    showWorkandCategories();
+}
+
+loaddata()
+
