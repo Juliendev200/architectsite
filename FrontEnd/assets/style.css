@@ -232,5 +232,22 @@ footer nav ul li{
 	align-items: center;
 	justify-content: center;
 	color:black;
+
+}
+
+.error{
+	display: flex;
+    justify-content: center;
+    padding: 5px 15px;
+    color: red;
+    font-family: Syne;
+    font-size: 18px;
+    border-radius: 60px;
+    background: #FFF;
+    margin-top: 15px;
+}
+
+
+#seconnecter {	
 	padding-bottom:211px;
 }

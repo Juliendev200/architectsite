@@ -19,8 +19,6 @@ async function lfworks(){
 
 lfworks().then(datawork => console.log(datawork))
 
-
-
 function loadworks(){
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
