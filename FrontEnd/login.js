@@ -4,7 +4,7 @@ function loginrequest () {
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({
+        body: JSON.stringify ({
             "email": InputEmailValue,
             "password": InputPasswordValue
         })
@@ -44,3 +44,5 @@ inputEmail.addEventListener('input', (e) => {
 inputPassword.addEventListener('input', (e) => {
     console.log(e.target.value);
 });
+
+console.log(token)
