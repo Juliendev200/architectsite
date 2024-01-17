@@ -307,14 +307,22 @@ h2 .link__modal {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	justify-content: center;
 	overflow: auto;
 	width: 630px;
 	height: 688px;
 	max-width: calc(100vh - 20px);
 	max-height: calc(100vh - 20px);
 	background-color: white;
-	gap:20px;
+	border-radius: 10px;
+	position: relative;
+}
+
+.modal-container h2{
+	font-family: Work Sans;
+	color:Black;
+	font-size: 26px;
+	font-weight: 400;
+	padding-top:60px;
 }
 
 .modal-gallery{
@@ -322,10 +330,11 @@ h2 .link__modal {
 	max-width: 420px;
 	display: grid;
 	align-items: center;
-	padding: 45px 105px;
+	padding-top: 46px;
+	padding-bottom: 67px;
 	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 	grid-column-gap: 7px;
-	grid-row-gap: 26px;
+	grid-row-gap:25px
 }
 
 .modal-gallery img {
@@ -343,9 +352,9 @@ h2 .link__modal {
 }
 
 #modal1 button{
-	position: relative;
-	top: 7px;
-    right: -285px;
+	position: absolute;
+	top: 26px;
+    right: 30px;
 	border:none;
 }
 
@@ -361,16 +370,27 @@ h2 .link__modal {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
+.binfont{
+	position: relative;
+}
+
 .binfont::before {
-	display: flex;
-	z-index: 1;
+	position: absolute;
 	content: "";
-    position: absolute;
-    right: 21.62px;
-    top: 13px;
-    padding: 7px 10px;
+    right: 5px;
+    top: 5px;
+	padding:0 0;
+    width: 17px;
+	height: 17px;
     border-radius: 2px;
     background-color: black;
     color: white;
     font-size: 14px;
+}
+
+.binfont i{
+	position: absolute;
+    right: 9px;
+    top: 13.5px;
+	color:white;
 }
