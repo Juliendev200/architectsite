@@ -138,21 +138,53 @@ function blackband () {
 }
 
 console.log(token)
-const focusableSelector = 'button, a, input, textarea'
+
 let modal = null;
+const focusableSelector = `button, a, input, textarea`
+let focusables = []
+
 
 const openmodal = function (e) {
     e.preventDefault()
-    modal = document.querySelector(e.target.getAttribute('href'))
-    focusables = Array.from(modal.querySelectorAll(focusableSelector))
+    const body = document.querySelector("body")
+    modaldiv = document.createElement('div')
+    body.appendChild(modaldiv)
+    let modalContent = `
+        <aside id="modal1" class="modal" role="dialog" aria-hidden="true" aria-modal="false" style="display:none;">
+            <div class="modal-container js-stop-propagation">
+                <button class="js-modal-close"><i class="fa-solid fa-xmark fa24px"></i></button>
+                <h2> Galerie photo</h2>
+                <div class="modal-gallery">
+    `
+    datawork.forEach((project) => {
+        const figure = document.createElement("figure");
+        figure.innerHTML=`
+            <figure class="binfont">
+                <i class="fa-solid fa-trash-can fa-xs"></i>
+                <img src="${project.imageUrl}" alt="${project.title}">
+            </figure>
+            `;
+        modalContent += figure.innerHTML;
+    });
+    modalContent += `
+            </div>
+			<form action="#" method="post">
+				<input type="submit" value="Ajouter une photo">
+			</form>
+	    </aside>    
+    `
+    modaldiv.insertAdjacentHTML("beforeend", modalContent);
+    modal = document.getElementById('modal1')
     modal.style.display = null
+    focusables = Array.from(modal.querySelectorAll(focusableSelector))
+    focusables[0].focus()     
     modal.removeAttribute('aria-hidden')
     modal.setAttribute('aria-modal', 'true')
     modal.addEventListener ('click', closemodal)
     modal.querySelector('.js-modal-close').addEventListener('click', closemodal)
     modal.querySelector('.js-stop-propagation').addEventListener('click', stoppropagation)
 }
-
+        
 const stoppropagation = function (e) {
     e.stopPropagation()
 }
@@ -163,9 +195,28 @@ const closemodal = function (e) {
     modal.style.display = "none"
     modal.setAttribute('aria-hidden', 'true')
     modal.removeAttribute('aria-modal')
+    modal.removeEventListener('click', closemodal)
     modal.querySelector('.js-modal-close').removeEventListener('click', closemodal)
-    modal.querySelector('.js-stop-propagation').removeEventListener('click', stoppropagation)
+    modal.querySelector('.js-modal-close').removeEventListener('click', stoppropagation)
     modal = null
+}
+
+const focusInModal = function (e) {
+    e.preventDefault()
+    console.log(focusables)
+    let index = focusables.findIndex(f => f === modal.querySelector(':focus'))
+    if (e.shiftKey === true) {
+        index --
+    } else {
+        index++
+    }
+    if (index >= focusables.length) {
+        index = 0
+    }
+    if (index < 0) {
+        index = focusables.length - 1
+    }
+    focusables [index].focus()
 }
 
 document.querySelectorAll('.link__modal').forEach(a => {
@@ -180,3 +231,4 @@ window.addEventListener('keydown', function (e) {
         focusInModal(e)
     }
 })
+
