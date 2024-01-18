@@ -357,6 +357,7 @@ h2 .link__modal {
 	top: 26px;
     right: 30px;
 	border:none;
+	cursor: pointer;
 }
 
 .fa24px{
@@ -394,8 +395,4 @@ h2 .link__modal {
     right: 9.25px;
     top: 14.5px;
 	color:white;
-}
-
-*:focus{
-	box-shadow: 0 10 greenyellow;
 }

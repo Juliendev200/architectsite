@@ -1,9 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////
+                                        // API area //
+
+// Variables utiles //
 let datawork;
 let datacategory;
 const logbut = document.getElementById("log");
 const token = localStorage.getItem("token");
 
-
+// Solicitation infos API //
 async function lfcategories(){
     const r = await fetch("http://localhost:5678/api/categories")
     const category = await r.json()
@@ -11,9 +15,10 @@ async function lfcategories(){
     return category
 }
 
-
+//Vérif infos//
 lfcategories().then(category => console.log(category))
 
+// Solicitation infos API //
 async function lfworks(){
     const r = await fetch("http://localhost:5678/api/works")
     const work = await r.json()
@@ -21,8 +26,17 @@ async function lfworks(){
     return work
 }
 
+//Vérif infos//
 lfworks().then(datawork => console.log(datawork))
 
+// Fonction en attente d'infos pour chargement de la page //
+async function loaddata() {
+    const works = await lfworks();
+    const categories = await lfcategories();
+    showWorkandCategories();
+}
+
+// Mode d'affichage des images //
 function loadworks(){
     const gallery = document.querySelector(".gallery");
     gallery.innerHTML = "";
@@ -35,6 +49,7 @@ function loadworks(){
     });
 }
 
+// Mise en page des infos récupérés via API + Mode d'affichage des catégories //
 function showWorkandCategories() {
     const buttondiv = document.createElement('div')
     portfolio.appendChild(buttondiv)
@@ -73,13 +88,18 @@ function showWorkandCategories() {
     portfolio.insertBefore(buttondiv, secondchild)
 }
 
-async function loaddata() {
-    const works = await lfworks();
-    const categories = await lfcategories();
-    showWorkandCategories();
+//-------- Fonction refresh pour synchroniser les images supprimés
+function refreshwork() {
+    lfworks().then((work) => {
+        datawork = work;
+        loadworks();
+    });
 }
-
 loaddata()
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+                                        // Amin area //
+
 
 if (token) {
     logoutadmin();
@@ -87,8 +107,7 @@ if (token) {
     blackband();
 }
 
-logbut.addEventListener("click", inoroutbut);
-
+// Si connecté, alors logbutton déconnecte //
 function logoutadmin () {
     if (token) {
         logbut.textContent = "logout";
@@ -100,6 +119,7 @@ function logoutadmin () {
     }
 }
 
+// Si pas connecté, logbutton envoi sur la page de connexion//
 function inoroutbut () {
     if (logbut.textContent === "login"){
         window.location.href = "./login.html";
@@ -108,7 +128,9 @@ function inoroutbut () {
         window.location.href = "./index.html";
     }
 }
+logbut.addEventListener("click", inoroutbut);
 
+// Affichage de l'option *Modifier* //
 function adminoption () {
     if (token) {
         const optionmodify = document.getElementsByClassName("link__modal");
@@ -119,6 +141,7 @@ function adminoption () {
     }
 }
 
+// Mise en page administrateur // 
 function blackband () {
     const header = document.querySelector("header")
     const blackbanddiv = document.createElement("div")
@@ -139,18 +162,44 @@ function blackband () {
 
 console.log(token)
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+                                        // Modal area //
+
+
+// Variables utiles //
 let modal = null;
 const focusableSelector = `button, a, input, textarea`
 let focusables = []
 
+// Fonctions de suppression des travaux // 
+async function fetchdelete(imageId) {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`http://localhost:5678/api/works/${imageId}`, {
+            method: "DELETE",
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        if (response.ok) {
+            console.log("Image supprimée avec succès");
+        } else {
+            alert("Erreur lors de la suppression de l'image");
+        }
+    } catch (error) {
+        console.log(error);
+    };
+};
 
+
+// Mise en place ouverture page modale // 
 const openmodal = function (e) {
     e.preventDefault()
     const body = document.querySelector("body")
     modaldiv = document.createElement('div')
     body.appendChild(modaldiv)
     let modalContent = `
-        <aside id="modal1" class="modal" role="dialog" aria-hidden="true" aria-modal="false" style="display:none;">
+        <aside id="modal1" class="modal" role="dialog" aria-hidden="true" aria-modal="false">
             <div class="modal-container js-stop-propagation">
                 <button class="js-modal-close"><i class="fa-solid fa-xmark fa24px"></i></button>
                 <h2> Galerie photo</h2>
@@ -161,7 +210,7 @@ const openmodal = function (e) {
         figure.innerHTML=`
             <figure class="binfont">
                 <i class="fa-solid fa-trash-can fa-xs"></i>
-                <img src="${project.imageUrl}" alt="${project.title}">
+                <img src="${project.imageUrl}" alt="${project.title}" data-id=${project.id}>
             </figure>
             `;
         modalContent += figure.innerHTML;
@@ -183,24 +232,41 @@ const openmodal = function (e) {
     modal.addEventListener ('click', closemodal)
     modal.querySelector('.js-modal-close').addEventListener('click', closemodal)
     modal.querySelector('.js-stop-propagation').addEventListener('click', stoppropagation)
+    modal.querySelectorAll('.fa-trash-can').forEach (a => {
+        a.addEventListener('click', deletework)})
+    modal.querySelectorAll('.fa-trash-can').forEach (a => {
+        a.addEventListener('click', refreshwork)})
 }
-        
+
+// Limite propagation des events listener//
 const stoppropagation = function (e) {
     e.stopPropagation()
 }
 
+// Remise en place fermeture modale //
 const closemodal = function (e) {
     if (modal === null) return
     e.preventDefault()
     modal.style.display = "none"
     modal.setAttribute('aria-hidden', 'true')
     modal.removeAttribute('aria-modal')
-    modal.removeEventListener('click', closemodal)
+    modal.removeEventListener('click', closemodal)  
     modal.querySelector('.js-modal-close').removeEventListener('click', closemodal)
     modal.querySelector('.js-modal-close').removeEventListener('click', stoppropagation)
     modal = null
 }
 
+// Navigation possible via clavier //
+window.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' || e.key === 'Esc'){
+        closemodal(e)
+    }
+    if (e.key === 'Tab' && modal !== null) {
+        focusInModal(e)
+    }
+})
+
+// Suivi du focus // 
 const focusInModal = function (e) {
     e.preventDefault()
     console.log(focusables)
@@ -219,16 +285,22 @@ const focusInModal = function (e) {
     focusables [index].focus()
 }
 
+// Ouverture de la modale au clic //
 document.querySelectorAll('.link__modal').forEach(a => {
     a.addEventListener('click', openmodal)
 })
 
-window.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' || e.key === 'Esc'){
-        closemodal(e)
+
+// Suppression des travaux //
+const deletework = function (e) {
+    e.preventDefault()
+    const thepicture = e.target.parentNode.querySelector("img")
+    if (thepicture){
+        const imageId = thepicture.dataset.id;
+        console.log (thepicture.dataset.id)
+        fetchdelete(imageId).then(() => {
+            thepicture.parentNode.remove();
+        })
     }
-    if (e.key === 'Tab' && modal !== null) {
-        focusInModal(e)
-    }
-})
+}
 
