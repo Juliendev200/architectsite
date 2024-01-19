@@ -352,10 +352,18 @@ h2 .link__modal {
 	justify-content: center;
 }
 
-#modal1 button{
+.js-modal-close {
 	position: absolute;
 	top: 26px;
     right: 30px;
+	border:none;
+	cursor: pointer;
+}
+
+.js-modal-before {
+	position: absolute;
+	top: 26px;
+    left: 30px;
 	border:none;
 	cursor: pointer;
 }
@@ -395,4 +403,18 @@ h2 .link__modal {
     right: 9.25px;
     top: 14.5px;
 	color:white;
+}
+
+.add-picture{
+	display: flex;
+	flex-direction: column;
+}
+
+.add-picture-form {
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+.add-picture i {
+	position: absolute;
 }

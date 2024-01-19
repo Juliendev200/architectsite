@@ -4,6 +4,7 @@
 // Variables utiles //
 let datawork;
 let datacategory;
+let modaldiv;
 const logbut = document.getElementById("log");
 const token = localStorage.getItem("token");
 
@@ -196,10 +197,13 @@ async function fetchdelete(imageId) {
 const openmodal = function (e) {
     e.preventDefault()
     const body = document.querySelector("body")
-    modaldiv = document.createElement('div')
-    body.appendChild(modaldiv)
+    if (modaldiv === undefined){
+        modaldiv = document.createElement('div')
+        body.appendChild(modaldiv)
+    }
+    console.log(modaldiv)
     let modalContent = `
-        <aside id="modal1" class="modal" role="dialog" aria-hidden="true" aria-modal="false">
+        <aside id="modal1" class="modal" role="dialog" aria-hidden="true" aria-modal="false" style="display:none;">
             <div class="modal-container js-stop-propagation">
                 <button class="js-modal-close"><i class="fa-solid fa-xmark fa24px"></i></button>
                 <h2> Galerie photo</h2>
@@ -218,7 +222,7 @@ const openmodal = function (e) {
     modalContent += `
             </div>
 			<form action="#" method="post">
-				<input type="submit" value="Ajouter une photo">
+				<input type="submit" id='addphotobut' value="Ajouter une photo">
 			</form>
 	    </aside>    
     `
@@ -227,6 +231,11 @@ const openmodal = function (e) {
     modal.style.display = null
     focusables = Array.from(modal.querySelectorAll(focusableSelector))
     focusables[0].focus()     
+    const addphotobut = document.getElementById('addphotobut')
+    addphotobut.addEventListener('click', (e) => {
+        stoppropagation(e)
+        postmodal()
+    })
     modal.removeAttribute('aria-hidden')
     modal.setAttribute('aria-modal', 'true')
     modal.addEventListener ('click', closemodal)
@@ -253,7 +262,7 @@ const closemodal = function (e) {
     modal.removeEventListener('click', closemodal)  
     modal.querySelector('.js-modal-close').removeEventListener('click', closemodal)
     modal.querySelector('.js-modal-close').removeEventListener('click', stoppropagation)
-    modal = null
+    modal === null
 }
 
 // Navigation possible via clavier //
@@ -291,7 +300,7 @@ document.querySelectorAll('.link__modal').forEach(a => {
 })
 
 
-// Suppression des travaux //
+// Suppression des travaux en direct//
 const deletework = function (e) {
     e.preventDefault()
     const thepicture = e.target.parentNode.querySelector("img")
@@ -304,3 +313,34 @@ const deletework = function (e) {
     }
 }
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+                                        // Post area //
+                
+const postmodal = function (e) {
+    const modalcontainer = document.querySelector('.modal-container')
+    modalcontainer.innerHTML = `
+    <button class="js-modal-close"><i class="fa-solid fa-xmark fa24px"></i></button>
+    <button class="js-modal-before"><i class="fa-solid fa-arrow-left fa-2xl"></i></button>
+    <h2> Ajout photo</h2>
+        <div class="add-picture">
+        <form action="#" class="add-picture-form" method="post">
+            <i class="fa-regular fa-image"></i>
+            <input type=file id="picture-input"><br>
+            <label for="picture-input"> + Ajouter une photo </label>
+            <p> jpg, png : 4mo max</p>
+        </div>
+        
+    `
+    modal.querySelector('.js-modal-close').addEventListener('click', closemodal)
+    modal.querySelector('.js-modal-before').addEventListener('click', (e) =>{
+        stoppropagation(e)
+        previousmodal(e)
+        openmodal(e)
+    })
+
+}
+
+const previousmodal = function(e){
+    e.preventDefault()
+    modaldiv.innerHTML =''
+}
