@@ -221,7 +221,7 @@ const openmodal = function (e) {
     });
     modalContent += `
             </div>
-			<form action="#" method="post">
+			<form action="#" method="post" class='modal-form-1'>
 				<input type="submit" id='addphotobut' value="Ajouter une photo">
 			</form>
 	    </aside>    
@@ -322,14 +322,20 @@ const postmodal = function (e) {
     <button class="js-modal-close"><i class="fa-solid fa-xmark fa24px"></i></button>
     <button class="js-modal-before"><i class="fa-solid fa-arrow-left fa-2xl"></i></button>
     <h2> Ajout photo</h2>
+    <form action="#" class="add-picture-form" method="post">
         <div class="add-picture">
-        <form action="#" class="add-picture-form" method="post">
             <i class="fa-regular fa-image"></i>
             <input type=file id="picture-input"><br>
-            <label for="picture-input"> + Ajouter une photo </label>
+            <label for="picture-input" > + Ajouter une photo </label>
             <p> jpg, png : 4mo max</p>
         </div>
-        
+        <div class="picture-infos">
+            <label for="picture-title"> Titre </label>
+            <input type=text id="picture-title">
+            <label for="picture-category"> Catégorie </label>
+            <input type=text id="picture-category">
+        </div>
+            <input type="submit" id='postphoto' value="Valider">
     `
     modal.querySelector('.js-modal-close').addEventListener('click', closemodal)
     modal.querySelector('.js-modal-before').addEventListener('click', (e) =>{
@@ -337,7 +343,6 @@ const postmodal = function (e) {
         previousmodal(e)
         openmodal(e)
     })
-
 }
 
 const previousmodal = function(e){
