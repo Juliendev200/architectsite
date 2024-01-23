@@ -325,7 +325,7 @@ const postmodal = function (e) {
     <form action="#" class="add-picture-form" method="post">
         <div class="add-picture">
             <i class="fa-regular fa-image"></i>
-            <input type=file id="picture-input"><br>
+            <input type=file id="picture-input" accept=".png, .jpg"><br>
             <label for="picture-input" > + Ajouter une photo </label>
             <p> jpg, png : 4mo max</p>
         </div>
@@ -333,10 +333,13 @@ const postmodal = function (e) {
             <label for="picture-title"> Titre </label>
             <input type=text id="picture-title">
             <label for="picture-category"> Catégorie </label>
-            <input type=text id="picture-category">
+            <select name="picture-category" id="picture-category">
+            <option value=" " class="option-category" label="Sélectionner une catégorie"></option>
+            ${datacategory.map((category) => `<option value="${category.id}"> ${category.name}</option>`)}
         </div>
             <input type="submit" id='postphoto' value="Valider">
     `
+    addpictureinput()
     modal.querySelector('.js-modal-close').addEventListener('click', closemodal)
     modal.querySelector('.js-modal-before').addEventListener('click', (e) =>{
         stoppropagation(e)
@@ -348,4 +351,114 @@ const postmodal = function (e) {
 const previousmodal = function(e){
     e.preventDefault()
     modaldiv.innerHTML =''
+}
+
+const addpictureinput = function () {
+    const addinput = document.querySelector('#picture-input')
+    const divaddpicture = document.querySelector('.add-picture')
+    const picturetitle = document.querySelector('#picture-title')
+    const picturecategory = document.querySelector('#picture-category')
+    picturecategory.addEventListener("input", (e) => {
+        checker(picturecategory.value, addinput.files[0], picturetitle.value);
+    });
+    picturetitle.addEventListener("input", (e) => {
+        checker(picturecategory.value, addinput.files[0], picturetitle.value);
+    });
+    addinput.addEventListener("change", (e) => {
+        const selectfile = e.target.files[0]
+        const newfile = new FileReader()
+        const filesizeinbytes = selectfile.size
+        const filesizeinmegabytes = filesizeinbytes / (1024 * 1024);
+        const maxsize = 4;
+        if (filesizeinmegabytes > maxsize){
+            alert("Taille du fichier dépassée. Veuillez réspecter la limite maximum de 4Mo."
+            )
+            return
+        }
+        newfile.addEventListener("load", (e) => {
+            const addimage = document.createElement("img")
+            addimage.src = e.target.result;
+            addimage.classList.add('addimagedisplay')
+            divaddpicture.querySelectorAll('*').forEach((child) => {
+                child.style.display = "none"
+            })
+            divaddpicture.appendChild(addimage)
+            divaddpicture.style.flexDirection = "revert"
+            checker(picturecategory.value, addinput.files[0], picturetitle.value)
+        })
+        newfile.readAsDataURL(selectfile)
+    })
+    const submit = document.querySelector('.add-picture-form')
+    submit.addEventListener("submit", (e) => {
+        e.preventDefault()
+        const work = {
+            title: picturetitle.value,
+            image: addinput.files[0],
+            category: picturecategory.value,
+        }
+        loadnewwork(work)
+    })
+}
+
+function checker(category, title, image) {
+    const submitbutton = document.getElementById("postphoto")
+    const submit = document.querySelector(".add-picture-form")
+    if (category.trim() !== '' && title && image) {
+        submitbutton.style.background = "#1D6154"
+        submit.disabled = false
+    } else {
+        submitbutton.style.background = "#A7A7A7"
+        submit.disabled = true
+    }
+}
+
+function loadnewwork(work) {
+    const token = localStorage.getItem(`token`)
+    const formData = new FormData()
+    formData.append("image", work.image)
+    formData.append("title", work.title)
+    formData.append("category", work.category)
+    let request = {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+    };
+    fetch("http://localhost:5678/api/works", request)
+        .then((response) => {
+            if (response.ok) {
+                actualiser()
+                alert(`Votre projet ` + work.title + ` est en ligne`)
+                return lfworks()
+            } else {
+                alert("Veuillez remplir les formulaires ")
+                console.log("Erreur lors de la mise à jour de l'image ")
+            }
+        })
+        .then((updateworks) => {
+            if (updateworks) {
+                datawork = updateworks
+                loadworks()
+            }
+        });
+}
+
+const actualiser = function () {
+    const reinitpicture = document.querySelector(".addimagedisplay")
+    const picturetitle = document.querySelector("#picture-title")
+    const picturecategory = document.querySelector("#picture-category")
+    const divaddpicture = document.querySelector(".add-picture")
+    const submit = document.querySelector(".add-picture-form")
+    const submitbutton = document.getElementById("postphoto")
+    reinitpicture.value = ""
+    picturetitle.value = ""
+    picturecategory.value = "Sélectionner une catégorie"
+    submit.disabled = true
+    submitbutton.style.background = "#A7A7A7"
+    divaddpicture.querySelectorAll("*").forEach((child) => {
+        child.style.display = "flex"
+    })
+    divaddpicture.style.flexDirection = "column"
+    postmodal()
 }

@@ -361,6 +361,7 @@ h2 .link__modal {
     right: 30px;
 	border:none;
 	cursor: pointer;
+	background-color: #FFF;
 }
 
 .js-modal-before {
@@ -369,6 +370,7 @@ h2 .link__modal {
     left: 30px;
 	border:none;
 	cursor: pointer;
+	background-color: #FFF;
 }
 
 .fa24px{
@@ -468,8 +470,14 @@ h2 .link__modal {
 	width: 416px;
     border: none;
     box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
-    height: 40px;
     padding-top: 10px;
+	color: #444;
+	font-family: "Work Sans";
+	font-size: 14px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	padding:18px 16px;
 }
 
 #postphoto {
@@ -479,4 +487,22 @@ h2 .link__modal {
 	border: none;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 	background-color: #A7A7A7;
+}
+
+#picture-category{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.addimagedisplay{
+	width:30%;
+	max-width: 420px;
+	max-height: 169px;
+	object-fit: cover;
+}
+
+.gallery img {
+	max-height: 490.88px;
+	object-fit: cover
 }
