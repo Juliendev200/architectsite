@@ -383,7 +383,6 @@ const addpictureinput = function () {
                 child.style.display = "none"
             })
             divaddpicture.appendChild(addimage)
-            divaddpicture.style.flexDirection = "revert"
             checker(picturecategory.value, addinput.files[0], picturetitle.value)
         })
         newfile.readAsDataURL(selectfile)
@@ -459,6 +458,5 @@ const actualiser = function () {
     divaddpicture.querySelectorAll("*").forEach((child) => {
         child.style.display = "flex"
     })
-    divaddpicture.style.flexDirection = "column"
     postmodal()
 }
