@@ -442,23 +442,27 @@ function loadnewwork(work) {
         body: formData,
     };
     fetch("http://localhost:5678/api/works", request)
-        .then((response) => {
-            if (response.ok) {
-                actualiser()
-                alert(`Votre projet ` + work.title + ` est en ligne`)
-                return lfworks()
-            } else {
-                alert("Veuillez remplir les formulaires ")
-                console.log("Erreur lors de la mise à jour de l'image ")
-            }
-        })
-        // Modification post soutenance //
-        .then((updateworks) => {
-            if (updateworks) {
-                datawork.push(updateworks)
-                lfworks()
-            }
-        });
+    .then ((response) => {
+        if 
+        (response.ok === true) {return response.json()}
+        else {
+        alert("Veuillez remplir les formulaires ")
+        console.log("Erreur lors de la mise à jour de l'image")
+    }})
+    .then ((newwork) => {
+        if (newwork) {
+            actualiser()
+            return lfworks()
+    }
+})
+    // Modification post soutenance //
+    .then((updateworks) => {
+        if (updateworks) {
+            datawork = updateworks
+            console.log(updateworks)
+            loadworks()
+        }
+    });
         // Modification post soutenance //
 }
 
