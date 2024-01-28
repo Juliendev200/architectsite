@@ -506,3 +506,9 @@ h2 .link__modal {
 	max-height: 490.88px;
 	object-fit: cover
 }
+
+/* Modification post soutenance */
+.hidden {
+	visibility: hidden;
+}
+/* Modification post soutenance */

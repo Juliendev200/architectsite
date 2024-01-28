@@ -5,6 +5,7 @@
 let datawork;
 let datacategory;
 let modaldiv;
+let buttondiv;
 const logbut = document.getElementById("log");
 const token = localStorage.getItem("token");
 
@@ -17,7 +18,7 @@ async function lfcategories(){
 }
 
 //Vérif infos//
-lfcategories().then(category => console.log(category))
+lfcategories().then(datacategory => console.log(datacategory))
 
 // Solicitation infos API //
 async function lfworks(){
@@ -32,8 +33,8 @@ lfworks().then(datawork => console.log(datawork))
 
 // Fonction en attente d'infos pour chargement de la page //
 async function loaddata() {
-    const works = await lfworks();
-    const categories = await lfcategories();
+    await lfworks();
+    await lfcategories();
     showWorkandCategories();
 }
 
@@ -54,6 +55,9 @@ function loadworks(){
 function showWorkandCategories() {
     const buttondiv = document.createElement('div')
     portfolio.appendChild(buttondiv)
+    if (token){
+    buttondiv.style.display = 'none'
+    }
     const addbutton = document.createElement('button');
     const gallery = document.querySelector(".gallery")
     addbutton.textContent = "Tous";
@@ -68,11 +72,13 @@ function showWorkandCategories() {
         buttoncategory.textContent = categories.name;
         buttoncategory.classList.add('button');
         buttondiv.appendChild(buttoncategory);
-        buttoncategory.addEventListener("click", () =>{
-            const categoryName = buttoncategory.textContent;
+            // Modification post soutenance //
+        buttoncategory.addEventListener("click", () => {
             const filterbutton = datawork.filter (function (work){
-                return work.category.name === categoryName
+                buttoncategoryId = categories.id
+                return work.category.id === buttoncategoryId 
             })
+            // Modification post soutenance //
             gallery.innerHTML = ''
             filterbutton.forEach((project) => {
                 const figure = document.createElement("figure");
@@ -89,7 +95,7 @@ function showWorkandCategories() {
     portfolio.insertBefore(buttondiv, secondchild)
 }
 
-//-------- Fonction refresh pour synchroniser les images supprimés
+// Fonction refresh pour synchroniser les images supprimés
 function refreshwork() {
     lfworks().then((work) => {
         datawork = work;
@@ -201,7 +207,6 @@ const openmodal = function (e) {
         modaldiv = document.createElement('div')
         body.appendChild(modaldiv)
     }
-    console.log(modaldiv)
     let modalContent = `
         <aside id="modal1" class="modal" role="dialog" aria-hidden="true" aria-modal="false" style="display:none;">
             <div class="modal-container js-stop-propagation">
@@ -233,6 +238,9 @@ const openmodal = function (e) {
     focusables[0].focus()     
     const addphotobut = document.getElementById('addphotobut')
     addphotobut.addEventListener('click', (e) => {
+    // Nétait pas sur le livrable envoyé //
+    //    e.preventDefault() //
+    ///////////////////////////////////////
         stoppropagation(e)
         postmodal()
     })
@@ -263,6 +271,7 @@ const closemodal = function (e) {
     modal.querySelector('.js-modal-close').removeEventListener('click', closemodal)
     modal.querySelector('.js-modal-close').removeEventListener('click', stoppropagation)
     modal === null
+    lfworks()
 }
 
 // Navigation possible via clavier //
@@ -315,6 +324,9 @@ const deletework = function (e) {
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
                                         // Post area //
+
+
+// Mise en place ouverture modale "post" //
                 
 const postmodal = function (e) {
     const modalcontainer = document.querySelector('.modal-container')
@@ -348,11 +360,14 @@ const postmodal = function (e) {
     })
 }
 
+// Delete modale pour rechargement page precedente //
 const previousmodal = function(e){
     e.preventDefault()
     modaldiv.innerHTML =''
 }
 
+
+// Mise en place formulaire //
 const addpictureinput = function () {
     const addinput = document.querySelector('#picture-input')
     const divaddpicture = document.querySelector('.add-picture')
@@ -399,6 +414,7 @@ const addpictureinput = function () {
     })
 }
 
+// Vérif formulaire remplit pour button hilight //
 function checker(category, title, image) {
     const submitbutton = document.getElementById("postphoto")
     const submit = document.querySelector(".add-picture-form")
@@ -411,6 +427,7 @@ function checker(category, title, image) {
     }
 }
 
+// Fonction fetch Post //
 function loadnewwork(work) {
     const token = localStorage.getItem(`token`)
     const formData = new FormData()
@@ -435,14 +452,17 @@ function loadnewwork(work) {
                 console.log("Erreur lors de la mise à jour de l'image ")
             }
         })
+        // Modification post soutenance //
         .then((updateworks) => {
             if (updateworks) {
-                datawork = updateworks
-                loadworks()
+                datawork.push(updateworks)
+                lfworks()
             }
         });
+        // Modification post soutenance //
 }
 
+// Rechargement auto //
 const actualiser = function () {
     const reinitpicture = document.querySelector(".addimagedisplay")
     const picturetitle = document.querySelector("#picture-title")
